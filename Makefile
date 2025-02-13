@@ -1,4 +1,4 @@
-PROG = kasiski
+PROG = kasiski encode
 OBJS = ${PROG:=.o}
 SRCS = ${PROG:=.c}
 
