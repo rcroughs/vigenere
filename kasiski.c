@@ -1,4 +1,5 @@
 #include "primes.h"
+#include <ctype.h>
 #include <math.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -54,6 +55,18 @@ struct Trigram {
   size_t lastpos;
 };
 
+static double freqfr[ALPHASIZE] = {
+    [CTOI('A')] = 0.08167, [CTOI('B')] = 0.01492, [CTOI('C')] = 0.02782,
+    [CTOI('D')] = 0.04253, [CTOI('E')] = 0.12702, [CTOI('F')] = 0.02228,
+    [CTOI('G')] = 0.02015, [CTOI('H')] = 0.06094, [CTOI('I')] = 0.06966,
+    [CTOI('J')] = 0.00153, [CTOI('K')] = 0.00772, [CTOI('L')] = 0.04025,
+    [CTOI('M')] = 0.02406, [CTOI('N')] = 0.06749, [CTOI('O')] = 0.07507,
+    [CTOI('P')] = 0.01929, [CTOI('Q')] = 0.00095, [CTOI('R')] = 0.05987,
+    [CTOI('S')] = 0.06327, [CTOI('T')] = 0.09056, [CTOI('U')] = 0.02758,
+    [CTOI('V')] = 0.00978, [CTOI('W')] = 0.02360, [CTOI('X')] = 0.00150,
+    [CTOI('Y')] = 0.01974, [CTOI('Z')] = 0.00074,
+};
+
 static double freqen[ALPHASIZE] = {
     [CTOI('A')] = 0.08200, [CTOI('B')] = 0.01500, [CTOI('C')] = 0.02800,
     [CTOI('D')] = 0.04300, [CTOI('E')] = 0.13000, [CTOI('F')] = 0.02200,
@@ -104,17 +117,16 @@ static void *erealloc(void *ptr, size_t size) {
   return p;
 }
 
-static int isalpha(char c) {
-  return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
-}
-
 static double *parseargs(int argc, char *argv[]) {
   double *freq;
   int ch;
 
-  freq = freqen;
+  freq = freqfr;
   while ((ch = getopt(argc, argv, "ep")) != -1) {
     switch (ch) {
+    case 'f':
+      freq = freqfr;
+      break;
     case 'e':
       freq = freqen;
       break;
